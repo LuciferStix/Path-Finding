@@ -14,10 +14,10 @@ class Node:
         self.x=row*self.size
         self.y=col*self.size
         self.color=WHITE
+        self.neighbors=[]
 
     def draw(self):
         pygame.draw.rect(self.win,self.color,(self.x,self.y,self.size,self.size))
-
 
     def get_pos(self):
         return self.x,self.y
@@ -68,3 +68,9 @@ def make_blocks(rows,cols,win_size,win)->list[2]:
             block[row].append(node)
 
     return block      
+
+# calculate block row and col
+def find_node(x,y,size,grid_block):
+    row=x//size
+    col=y//size
+    return grid_block[row][col]

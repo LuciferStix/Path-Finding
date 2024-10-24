@@ -19,11 +19,7 @@ def draw_grid(rows,cols,gap):
 #a clock object (purpose :  fixed fps)
 clock=pygame.time.Clock()
 
-# calculate block row and col
-def find_node(x,y,size,grid_block):
-    row=x//size
-    col=y//size
-    return grid_block[row][col]
+
 
 
 
@@ -40,6 +36,7 @@ def main() ->None :
     start_node=None
     end_node=None
 
+    started=False
 
     while run:        
         clock.tick(40)
@@ -49,6 +46,8 @@ def main() ->None :
                 continue
             x,y=pygame.mouse.get_pos()  
             mouse=pygame.mouse.get_pressed()
+
+            ###### MOUSE BTN ########
 
             # left btn
             if mouse[Key["LEFT"].value] :
@@ -77,6 +76,13 @@ def main() ->None :
                 elif node ==end_node:
                     end_node=None
                 node.reset()
+
+            # #### KEYBOARD BTN  ######
+            if event.type == pygame.KEYDOWN :
+                if event.key == pygame.K_SPACE and not started:
+                    # algorithm()
+                    pass
+
 
         for blocks in grid_blocks:
             for block in blocks:
