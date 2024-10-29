@@ -5,6 +5,10 @@ from colors import *
 # how to write pyi files
 
 class Node:
+    # class variable
+    (win_H := 0),(win_W :=0)
+    total_rows=0
+    total_cols=0
 
     def __init__(self,row,col,size,win):
         self.row=row
@@ -15,6 +19,11 @@ class Node:
         self.y=col*self.size
         self.color=WHITE
         self.neighbors=[]
+
+    def fix_win_dim(self):
+        Node.win_H=self.win.get_height()
+        Node.win_W=self.win.get_width()
+        
 
     def draw(self):
         pygame.draw.rect(self.win,self.color,(self.x,self.y,self.size,self.size))
@@ -54,11 +63,34 @@ class Node:
         
     def reset(self):
         self.color=WHITE
+    def make_path(self)    :
+        self.color=BLUE
+
+    def update_neighbors(self,grid):
+        # getting nodes from top, bottom ,left ,right
+        top=grid[self.row-1][self.col] if self.row-1 >= 0 else 0
+        bottom=grid[self.row+1][self.col] if self.row+1 < Node.total_rows else 0
+        left=grid[self.row][self.col-1] if self.col-1 >=0 else 0 
+        right=grid[self.row][self.col+1] if self.col+1 < Node.total_cols else 0
+
+        # using short circuiting (thats why else has 0 in above code)
+
+        if top and not top.is_barrier():
+            self.neighbors.append(top)
+        if bottom and not bottom.is_barrier():
+            self.neighbors.append(bottom)
+        if left and not left.is_barrier():
+            self.neighbors.append(left)
+        if right and not right.is_barrier():
+            self.neighbors.append(right)
+        
+
+
 
 
 #creating all grid blocks in the screen
-def make_blocks(rows,cols,win_size,win)->list[2]:
-
+def make_blocks(rows,cols,win)->list[2]:
+    win_size=win.get_height()
     size=win_size//rows
     block=[]
     for row in range(rows):
@@ -69,8 +101,10 @@ def make_blocks(rows,cols,win_size,win)->list[2]:
 
     return block      
 
-# calculate block row and col
+# calculate node from row and col
 def find_node(x,y,size,grid_block):
     row=x//size
     col=y//size
     return grid_block[row][col]
+
+

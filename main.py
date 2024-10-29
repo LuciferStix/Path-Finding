@@ -1,13 +1,14 @@
 import pygame
-from models import make_blocks
+from models import *
 from colors import *
-from utils import Key
+from utils import *
 
 width=800
 
 #screen setup
 win=pygame.display.set_mode((width,width))
 pygame.display.set_caption("Path finder")
+
 
 #func to draw the grid lines
 def draw_grid(rows,cols,gap):
@@ -20,17 +21,16 @@ def draw_grid(rows,cols,gap):
 clock=pygame.time.Clock()
 
 
-
-
-
 #main func
 def main() ->None :
     run=True
     rows=cols=50
+    Node.total_rows=rows
+    Node.total_cols=cols
     size=width//rows
 
     # creating and storing every block in the screen
-    grid_blocks=make_blocks(rows,cols,win_size=width,win=win)
+    game_nodes=make_blocks(rows,cols,win=win)
 
     # initial and final node
     start_node=None
@@ -38,20 +38,24 @@ def main() ->None :
 
     started=False
 
-    while run:        
-        clock.tick(40)
+    while run:
+        clock.tick(30)
         for event in pygame.event.get():
+
             if event.type == pygame.QUIT :
                 run=False
                 continue
-            x,y=pygame.mouse.get_pos()  
-            mouse=pygame.mouse.get_pressed()
+
+            x,y=pygame.mouse.get_pos()
+            mouse=pygame.mouse.get_pressed() # output : (left btn,middle btn,right btn) ->(false,false,false)
 
             ###### MOUSE BTN ########
 
             # left btn
             if mouse[Key["LEFT"].value] :
-                node=find_node(x,y,size,grid_blocks)
+                node=find_node(x,y,size,game_nodes)
+
+                #  check for single mouse click (purpose : to mark start and end node)
                 if event.type == pygame.MOUSEBUTTONDOWN and not end_node:
                     if not start_node:
                         start_node=node
@@ -63,6 +67,7 @@ def main() ->None :
                         node.set_end() 
                         continue
 
+                # check for mouse btn hold (purpose : to draw barriers )
                 else:
                     if node != start_node and node!=end_node and start_node and end_node:
                         node.set_barrier()   
@@ -70,7 +75,7 @@ def main() ->None :
 
             # right btn
             elif mouse[Key["RIGHT"].value]:
-                node=find_node(x,y,size,grid_blocks)
+                node=find_node(x,y,size,game_nodes)
                 if node ==start_node:
                     start_node=None
                 elif node ==end_node:
@@ -81,17 +86,26 @@ def main() ->None :
             if event.type == pygame.KEYDOWN :
                 if event.key == pygame.K_SPACE and not started:
                     # algorithm()
-                    pass
+                    count=0
+                    for row_node in game_nodes:
+                        for col_node in row_node:
+                            if not col_node.is_barrier():
+                                col_node.update_neighbors(game_nodes)
 
+                    print("complete")
+                    algorithm(start_node,end_node,game_nodes)
+                    continue
+                    
 
-        for blocks in grid_blocks:
+        #  drawing each nodes on the surface
+        for blocks in game_nodes:
             for block in blocks:
                 block.draw()
 
+        #  draw gridlines to separate nodes
         draw_grid(rows,cols,size)
 
         pygame.display.flip()
-
 
     pygame.quit()
 

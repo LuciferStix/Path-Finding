@@ -1,7 +1,13 @@
-RED=(255,0,0)
 YELLOW=(255,255,0)
+
+# final path
 BLUE=(0,0,255)
+
+# algo
+RED=(255,0,0)
 GREEN=(0,255,0)
+
+# markers
 BLACK=(0,0,0)
 WHITE=(255,255,255)
 PURPLE=(157,0,255)
