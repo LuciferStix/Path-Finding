@@ -3,7 +3,7 @@ from models import *
 from colors import *
 from utils import *
 
-width=800
+width=900
 
 #screen setup
 win=pygame.display.set_mode((width,width))
@@ -19,6 +19,20 @@ def draw_grid(rows,cols,gap):
 
 #a clock object (purpose :  fixed fps)
 clock=pygame.time.Clock()
+
+
+def draw(rows,cols,gap,game_nodes):
+    win.fill(WHITE)
+
+    #  drawing each nodes on the surface
+    for blocks in game_nodes:
+            for block in blocks:
+                block.draw()
+
+
+    draw_grid(rows,cols,gap)    
+    pygame.display.update()        
+
 
 #main func
 def main() ->None :
@@ -92,19 +106,13 @@ def main() ->None :
                                 col_node.update_neighbors(game_nodes)
 
                     print("complete")
-                    algorithm(start_node,end_node,game_nodes)
+                    algorithm(lambda:draw(rows,cols,size,game_nodes),start_node,end_node,game_nodes,)
                     continue
                     
 
-        #  drawing each nodes on the surface
-        for blocks in game_nodes:
-            for block in blocks:
-                block.draw()
-
-        #  draw gridlines to separate nodes
-        draw_grid(rows,cols,size)
-
-        pygame.display.flip()
+       
+        draw(rows,cols,size,game_nodes)
+        
 
     pygame.quit()
 

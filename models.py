@@ -66,6 +66,8 @@ class Node:
 
     def make_path(self):
         self.color=BLUE
+
+
     def __lt__(self,other):
         return False
 
@@ -83,6 +85,24 @@ class Node:
         left=grid[self.row][self.col-1] if self.col-1 >=0 else 0 
         right=grid[self.row][self.col+1] if self.col+1 < Node.total_cols else 0
 
+        # diagonals
+        topL=topR=botL=botR=0
+        # top left and top right
+        if self.row-1>=0 :
+            if self.col -1>=0 :
+                topL=grid[self.row-1][self.col-1]
+        if self.row-1>=0 :
+            if self.col +1< Node.total_cols :
+                topR=grid[self.row-1][self.col+1]
+
+        # bottom left and bottom right
+        if self.row+1 < Node.total_rows :
+            if self.col-1>=0 :
+                botL=grid[self.row+1][self.col-1]        
+        if self.row+1 < Node.total_rows :
+            if self.col +1< Node.total_cols :
+                botR=grid[self.row+1][self.col+1]
+
         # using short circuiting (thats why else has 0 in above code)
 
         if top and not top.is_barrier():
@@ -93,9 +113,19 @@ class Node:
             self.neighbors.append(left)
         if right and not right.is_barrier():
             self.neighbors.append(right)
-        
-
-
+                # diagonals
+        if topL and not topL.is_barrier():
+            if not top.is_barrier() or not left.is_barrier():
+                self.neighbors.append(topL)
+        if topR and not topR.is_barrier():
+            if not top.is_barrier() or not right.is_barrier():
+                self.neighbors.append(topR)
+        if botL and not botL.is_barrier():
+            if not bottom.is_barrier() or not left.is_barrier():
+                self.neighbors.append(botL)
+        if botR and not botR.is_barrier():
+            if not bottom.is_barrier() or not right.is_barrier():
+                self.neighbors.append(botR)
 
 
 #creating all grid blocks in the screen
