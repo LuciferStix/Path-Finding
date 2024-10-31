@@ -63,10 +63,20 @@ class Node:
         
     def reset(self):
         self.color=WHITE
-    def make_path(self)    :
+
+    def make_path(self):
         self.color=BLUE
+    def __lt__(self,other):
+        return False
 
     def update_neighbors(self,grid):
+
+        # this is done to prevent adding same nodes multiple times
+        #  otherwise it appends the same node multiple time if pressed the play btn (space bar)
+        self.neighbors=[]
+
+
+
         # getting nodes from top, bottom ,left ,right
         top=grid[self.row-1][self.col] if self.row-1 >= 0 else 0
         bottom=grid[self.row+1][self.col] if self.row+1 < Node.total_rows else 0

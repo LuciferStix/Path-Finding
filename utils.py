@@ -19,7 +19,7 @@ def algorithm(start,end,game_nodes):
 
     frontier_hash=[]
 
-    # came_from={}
+    came_from={}
 
 
 
@@ -29,12 +29,34 @@ def algorithm(start,end,game_nodes):
     f_score={node : float("inf") for row in game_nodes for node in row}
     f_score[start]=h(start.get_pos(),end.get_pos())
 
-    if start not in frontier_hash:
-        frontier.put((0,start))
-        frontier_hash.append(start)
+
+    frontier.put((0,start))
+    frontier_hash.append(start)
 
     while not frontier.empty() : 
+
         current=frontier.get()[1]
+
+        if current==end:
+            print("reached")
+            break
         
         for neighbor in  current.neighbors:
-            print(neighbors)
+
+            temp_g_score=g_score[current]+1
+
+            if temp_g_score < g_score[neighbor]:
+                g_score[neighbor]=temp_g_score
+                came_from[neighbor]=current
+                f_score[neighbor]=g_score[neighbor] + h(neighbor.get_pos(),end.get_pos())
+                if neighbor not in frontier_hash :
+                    frontier_hash.append(neighbor)
+                    frontier.put((f_score[neighbor],neighbor))
+                    neighbor.set_open()
+        if current !=start and current !=end:
+            current.set_visited()
+
+
+
+
+

@@ -20,7 +20,6 @@ def draw_grid(rows,cols,gap):
 #a clock object (purpose :  fixed fps)
 clock=pygame.time.Clock()
 
-
 #main func
 def main() ->None :
     run=True
@@ -111,4 +110,4 @@ def main() ->None :
 
 
 if __name__=="__main__":
-    main()    
+    main()  
